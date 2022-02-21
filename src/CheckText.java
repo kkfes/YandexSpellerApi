@@ -1,3 +1,5 @@
+import objects.CallBack;
+import objects.SpellResult;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;

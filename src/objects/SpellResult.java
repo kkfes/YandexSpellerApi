@@ -1,3 +1,5 @@
+package objects;
+
 import java.util.Arrays;
 
 public class SpellResult {
@@ -67,7 +69,7 @@ public class SpellResult {
 
     @Override
     public String toString() {
-        return "SpellResult{" +
+        return "objects.SpellResult{" +
                 "code=" + code +
                 ", pos=" + pos +
                 ", row=" + row +

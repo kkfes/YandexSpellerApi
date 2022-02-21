@@ -1,3 +1,7 @@
+package objects;
+
+import objects.SpellResult;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +18,7 @@ public class CallBack {
 
     @Override
     public String toString() {
-        return "CallBack{" +
+        return "objects.CallBack{" +
                 "spellResults=" + spellResults +
                 '}';
     }
