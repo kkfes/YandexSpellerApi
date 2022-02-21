@@ -30,9 +30,15 @@ API для испоользования Яндекс.Спеллер
 
 Объект SpellResult:
 int code; код ошибки, см. Коды ошибок(https://yandex.ru/dev/speller/doc/dg/reference/error-codes.htmlhttps://yandex.ru/dev/speller/doc/dg/reference/error-codes.html)
+
 int pos; позиция слова с ошибкой (отсчет от 0)
+
 int row; номер строки (отсчет от 0)
+
 int col; номер столбца (отсчет от 0)
+
 int len; длина слова с ошибкой.
+
 String word; исходное слово
+
 String[] s; подсказка (может быть несколько или могут отсутствовать).
