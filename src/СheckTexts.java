@@ -99,7 +99,6 @@ public class СheckTexts {
                                 result.append(inLine);
                             }
                             JSONObject jsonObject = new JSONObject("{\"words\":"+result+"}");
-                            System.out.println(url);
                             for (int j = 0;j<jsonObject.getJSONArray("words").length();j++){
                                 CallBack back = new CallBack();
                                 for (int v = 0; v < jsonObject.getJSONArray("words").getJSONArray(j).length(); v++) {
