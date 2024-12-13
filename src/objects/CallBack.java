@@ -1,7 +1,5 @@
 package objects;
 
-import objects.SpellResult;
-
 import java.util.ArrayList;
 import java.util.List;
 

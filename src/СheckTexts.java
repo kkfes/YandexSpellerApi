@@ -1,6 +1,8 @@
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import objects.CallBack;
 import objects.SpellResult;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -98,24 +100,32 @@ public class СheckTexts {
                             while ((inLine = in.readLine()) != null) {
                                 result.append(inLine);
                             }
-                            JSONObject jsonObject = new JSONObject("{\"words\":"+result+"}");
-                            for (int j = 0;j<jsonObject.getJSONArray("words").length();j++){
+                            Gson gson = new Gson();
+                            JsonObject jsonObject = gson.fromJson("{\"words\":" + result + "}", JsonObject.class);
+
+                            JsonArray wordsArray = jsonObject.getAsJsonArray("words");
+                            for (int j = 0; j < wordsArray.size(); j++) {
                                 CallBack back = new CallBack();
-                                for (int v = 0; v < jsonObject.getJSONArray("words").getJSONArray(j).length(); v++) {
+                                JsonArray wordVariantsArray = wordsArray.get(j).getAsJsonArray();
+
+                                for (int v = 0; v < wordVariantsArray.size(); v++) {
                                     SpellResult spellResult = new SpellResult();
-                                    spellResult.setCode(jsonObject.getJSONArray("words").getJSONArray(j).getJSONObject(v).getInt("code"));
-                                    spellResult.setPos(jsonObject.getJSONArray("words").getJSONArray(j).getJSONObject(v).getInt("pos"));
-                                    spellResult.setRow(jsonObject.getJSONArray("words").getJSONArray(j).getJSONObject(v).getInt("row"));
-                                    spellResult.setCol(jsonObject.getJSONArray("words").getJSONArray(j).getJSONObject(v).getInt("col"));
-                                    spellResult.setLen(jsonObject.getJSONArray("words").getJSONArray(j).getJSONObject(v).getInt("len"));
-                                    spellResult.setWord(jsonObject.getJSONArray("words").getJSONArray(j).getJSONObject(v).getString("word"));
-                                    String str = "";
-                                    for (int i = 0; i < jsonObject.getJSONArray("words").getJSONArray(j).getJSONObject(v).getJSONArray("s").length(); i++) {
-                                        str+=jsonObject.getJSONArray("words").getJSONArray(j).getJSONObject(v).getJSONArray("s").getString(i)+"|";
+                                    JsonObject wordObject = wordVariantsArray.get(v).getAsJsonObject();
+
+                                    spellResult.setCode(wordObject.get("code").getAsInt());
+                                    spellResult.setPos(wordObject.get("pos").getAsInt());
+                                    spellResult.setRow(wordObject.get("row").getAsInt());
+                                    spellResult.setCol(wordObject.get("col").getAsInt());
+                                    spellResult.setLen(wordObject.get("len").getAsInt());
+                                    spellResult.setWord(wordObject.get("word").getAsString());
+
+                                    JsonArray suggestions = wordObject.getAsJsonArray("s");
+                                    String[] strings = new String[suggestions.size()];
+                                    for (int i = 0; i < suggestions.size(); i++) {
+                                        strings[i] = suggestions.get(i).getAsString();
                                     }
-                                    str=str.substring(0,str.length()-1);
-                                    String[] strings = str.split("\\|");
                                     spellResult.setS(strings);
+
                                     back.getSpellResults().add(spellResult);
                                 }
                                 callBack.add(back);

@@ -1,6 +1,8 @@
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import objects.CallBack;
 import objects.SpellResult;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,17 +12,16 @@ import java.net.URL;
 import java.util.Arrays;
 
 public class CheckText {
-    private String text;  //Текст для проверки.
-    private String[] lang;  //Языки проверки.
-    private int options = 0;  //Опции Яндекс.Спеллера. Значением параметра является сумма значений требуемых опций, см.
-    //Например, options=6 — это сумма опций IGNORE_DIGITS и IGNORE_URLS. По умолчанию options=0.
+    private String text;  // Текст для проверки.
+    private String[] lang;  // Языки проверки.
+    private int options = 0;
+    // Опции Яндекс.Спеллера. Значением параметра является сумма значений требуемых опций, см.
+    // Например, options=6 — это сумма опций IGNORE_DIGITS и IGNORE_URLS. По умолчанию options=0.
     private String format = "plain";
-//    Формат проверяемого текста.
-//
-//    Возможные значения:
-//
-//    plain — текст без разметки (значение по умолчанию);
-//    html — HTML-текст.
+    // Формат проверяемого текста.
+    // Возможные значения:
+    // plain — текст без разметки (значение по умолчанию);
+    // html — HTML-текст.
 
     public String getText() {
         return text;
@@ -93,22 +94,28 @@ public class CheckText {
                             while ((inLine = in.readLine()) != null) {
                                 result.append(inLine);
                             }
-                            JSONObject jsonObject = new JSONObject("{\"words\":"+result+"}");
-                            for (int j = 0;j<jsonObject.getJSONArray("words").length();j++){
+                            Gson gson = new Gson();
+                            JsonObject jsonObject = gson.fromJson("{\"words\":" + result + "}", JsonObject.class);
+
+                            JsonArray wordsArray = jsonObject.getAsJsonArray("words");
+                            for (int j = 0; j < wordsArray.size(); j++) {
                                 SpellResult spellResult = new SpellResult();
-                                spellResult.setCode(jsonObject.getJSONArray("words").getJSONObject(j).getInt("code"));
-                                spellResult.setPos(jsonObject.getJSONArray("words").getJSONObject(j).getInt("pos"));
-                                spellResult.setRow(jsonObject.getJSONArray("words").getJSONObject(j).getInt("row"));
-                                spellResult.setCol(jsonObject.getJSONArray("words").getJSONObject(j).getInt("col"));
-                                spellResult.setLen(jsonObject.getJSONArray("words").getJSONObject(j).getInt("len"));
-                                spellResult.setWord(jsonObject.getJSONArray("words").getJSONObject(j).getString("word"));
-                                String str = "";
-                                for (int i = 0; i < jsonObject.getJSONArray("words").getJSONObject(j).getJSONArray("s").length(); i++) {
-                                    str+=jsonObject.getJSONArray("words").getJSONObject(j).getJSONArray("s").getString(i)+"|";
+                                JsonObject wordObject = wordsArray.get(j).getAsJsonObject();
+
+                                spellResult.setCode(wordObject.get("code").getAsInt());
+                                spellResult.setPos(wordObject.get("pos").getAsInt());
+                                spellResult.setRow(wordObject.get("row").getAsInt());
+                                spellResult.setCol(wordObject.get("col").getAsInt());
+                                spellResult.setLen(wordObject.get("len").getAsInt());
+                                spellResult.setWord(wordObject.get("word").getAsString());
+
+                                JsonArray suggestions = wordObject.getAsJsonArray("s");
+                                String[] strings = new String[suggestions.size()];
+                                for (int i = 0; i < suggestions.size(); i++) {
+                                    strings[i] = suggestions.get(i).getAsString();
                                 }
-                                str=str.substring(0,str.length()-1);
-                                String[] strings = str.split("\\|");
                                 spellResult.setS(strings);
+
                                 callBack.getSpellResults().add(spellResult);
                             }
                         }
