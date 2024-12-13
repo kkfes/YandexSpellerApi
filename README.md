@@ -30,7 +30,7 @@ API для испоользования Яндекс.Спеллер
 
 Объект SpellResult:
 
-int code; код ошибки, см. Коды ошибок(https://yandex.ru/dev/speller/doc/dg/reference/error-codes.htmlhttps://yandex.ru/dev/speller/doc/dg/reference/error-codes.html)
+int code; код ошибки, см. Коды ошибок(https://yandex.ru/dev/speller/doc/ru/reference/error-codes)
 
 int pos; позиция слова с ошибкой (отсчет от 0)
 
