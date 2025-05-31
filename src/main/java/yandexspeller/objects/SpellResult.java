@@ -1,4 +1,4 @@
-package objects;
+package yandexspeller.objects;
 
 import java.util.Arrays;
 
